@@ -22,8 +22,6 @@ class NeuralNetwork:
         self.init_weights_from_inputs_to_hidden_layer_neurons(hidden_layer_weights)
         self.init_weights_from_hidden_layer_neurons_to_output_layer_neurons(output_layer_weights)
         
-        self.fig=plt.figure()#得到画面
-        self.ax=self.fig.gca(projection='3d')#得到3d坐标的图
         self.x_list=[]
         self.x=[]
         self.y=[]
@@ -119,9 +117,9 @@ class NeuralNetwork:
 #        print(x,y,(x+1)*(y+1))
 #        self.ax.scatter(x,y,z,c='w')
 #        plt.pause(0.01)
-        cc=[]
-        for n in range(len(self.x)):
-          cc.append('r')
+#        cc=[]
+#        for n in range(len(self.x)):
+#          cc.append('r')
         self.ax.scatter(x,y,z,c=z)
     def write(self):
         self.hidden_layer.write_inspect()
@@ -135,9 +133,11 @@ class NeuralNetwork:
           self.z.append(z)
     def add_show_ok(self):
         print(len(self.x))
+        self.fig=plt.figure(1)#得到画面
+        self.ax=self.fig.gca(projection='3d')#得到3d坐标的图
         self.show(self.x,self.y,self.z)
-        plt.show()
-    def show1(self,x,y,z,s=0):
+#        plt.show()
+    def show_change(self,x,y,z,s=0):
         cValue = ['r','y','g','b',
         'r','y','g','b',
         'r','y','g','b',
@@ -154,18 +154,20 @@ class NeuralNetwork:
         else:
             self.ax.scatter(x,y,z,c=cValue[(y+1)])     
 #        self.ax.scatter(x,y,z,c=cValue[(x+1)*(y+1)])     
-    def add_show_ok1(self,s=0):
+    def add_show_change(self,s=0):
         print(len(self.x))
+        self.fig=plt.figure(2)#得到画面
+        self.ax=self.fig.gca(projection='3d')#得到3d坐标的图
         t=1
         for n in range(len(self.x_list)):
 #         if n % 8 == 0:
 #          if n % 10 == 0:
             if s==0:
-                self.show1(self.x_list[n][0],self.x_list[n][1]+t,self.x_list[n][2])
+                self.show_change(self.x_list[n][0],self.x_list[n][1]+t,self.x_list[n][2])
             else:
-                self.show1(self.x_list[n][0]+t,self.x_list[n][1],self.x_list[n][2],s)
+                self.show_change(self.x_list[n][0]+t,self.x_list[n][1],self.x_list[n][2],s)
             t+=1
-            plt.pause(0.0001)
+            plt.pause(0.000001)
             print(n, self.x_list[n][0],self.x_list[n][1]+t,self.x_list[n][2])
         while True:
           plt.pause(0.05) 
@@ -263,6 +265,10 @@ def f_study(in_data,out_data,num_hidden):
     output_layer_bias=random.random()
     # hidden_layer_bias=0.5
     # output_layer_bias=0.5
+    #hidden_layer_bias=0.9818422593240586
+    #output_layer_bias=0.4257418298889508
+    #output_layer_weights=[0.21060908544579016, 0.3621015782256518, 0.389550608461516, 0.694887632535093, 0.2838883570278381, 0.14531159931211668, 0.050878199748789266, 0.9347604317649699]
+    #hidden_layer_weights=[0.04280793666627325, 0.08852978656172383, 0.37410852669722616, 0.971427209397932, 0.9329954834047123, 0.19868833549666387, 0.2074656195413116, 0.9559695380687594]    
     nn=NeuralNetwork(len(in_data),num_hidden,len(out_data),hidden_layer_weights,hidden_layer_bias,output_layer_weights,output_layer_bias)
     for i in range(1000):
     # for i in range(random.randint(5000,10000)):
@@ -275,46 +281,13 @@ def f_study(in_data,out_data,num_hidden):
             print(i, round(nn.calculate_total_error([[in_data, out_data]]), 9))
     print(i,nn.feed_forward(in_data))
     nn.inspect()
-    nn.add_show_ok1(s=1)
+    nn.add_show_ok()
+    nn.add_show_change(s=1)
 
     return nn
 
 if 1:
- num_hidden=2#random.randint(2,15)
+ num_hidden=8#random.randint(2,15)
  print(num_hidden)
 # aa = f_study([0.1,0.2], [0.4, 0.3],num_hidden)    
- aa = f_study([0.1,0.2,0.3,0.4], [0.4, 0.3,0.2,0.1],num_hidden)    
-
-# 文中的例子:
-if 0:
- nn = NeuralNetwork(2, 2, 2, hidden_layer_weights=[0.15, 0.2, 0.25, 0.3], hidden_layer_bias=0.35, output_layer_weights=[0.4, 0.45, 0.5, 0.55], output_layer_bias=0.6)
- nn.inspect()
- training_inputs=[0.01, 0.02]
- print (training_inputs,nn.feed_forward(training_inputs))
- for i in range(10000):
-    nn.train(training_inputs, [0.02, 0.01])
-#    nn.train([float(i)/100, 0.0], [float(i)/100, 0.0])
-#    print(i, round(nn.calculate_total_error([[[0.01, 0.02], [0.02, 0.01]]]), 9))
-#    print(float(i)/100, round(nn.calculate_total_error([[[float(i)/100, 0.0], [float(i)/100, 0.0]]]), 9))
-#    nn.inspect()
- training_inputs=[0.01, 0.02]
- print (training_inputs,nn.feed_forward(training_inputs))
- training_inputs=[0.02, 0.03]
- print (training_inputs,nn.feed_forward(training_inputs))
- nn.inspect()
-
-#另外一个例子，可以把上面的例子注释掉再运行一下:
-if 0:
- training_sets = [
-     [[0, 0], [0]],
-     [[0, 1], [1]],
-     [[1, 0], [1]],
-     [[1, 1], [0]]
- ]
-
- nn = NeuralNetwork(len(training_sets[0][0]), 5, len(training_sets[0][1]))
- for i in range(10000):
-     training_inputs, training_outputs = random.choice(training_sets)
-     nn.train(training_inputs, training_outputs)
-     print(i, nn.calculate_total_error(training_sets))
- print (training_inputs,nn.feed_forward(training_inputs))
+ aa = f_study([0.1,0.2,0.3,0.4, 0.5, 0.7], [0.74, 0.8,0.54,0.01],num_hidden)    
